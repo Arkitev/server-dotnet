@@ -9,7 +9,7 @@ public class HealthEndpointTests(WebApplicationFactory<Program> factory)
     : IClassFixture<WebApplicationFactory<Program>>
 {
     [Fact]
-    public async Task GET_HealthEndpoint_ReturnsStatusUp()
+    public async Task GET_HealthEndpoint_ReturnsStatusHealthy()
     {
         var client = factory.CreateClient();
         var response = await client.GetAsync("/health");
@@ -18,7 +18,20 @@ public class HealthEndpointTests(WebApplicationFactory<Program> factory)
 
         var payload = await response.Content.ReadFromJsonAsync<HealthDto>();
         payload.Should().NotBeNull();
-        payload!.Status.Should().Be("UP");
+        payload!.Status.Should().Be("Healthy");
+    }
+
+    [Fact]
+    public async Task GET_ReadinessEndpoint_ReturnsStatusHealthy()
+    {
+        var client = factory.CreateClient();
+        var response = await client.GetAsync("/readiness");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var payload = await response.Content.ReadFromJsonAsync<HealthDto>();
+        payload.Should().NotBeNull();
+        payload!.Status.Should().Be("Healthy");
     }
 
     private class HealthDto

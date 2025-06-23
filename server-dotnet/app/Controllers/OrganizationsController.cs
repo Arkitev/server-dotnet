@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using server_dotnet.Dtos;
 using server_dotnet.Services.Interfaces;
 
 namespace server_dotnet.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class OrganizationsController : ControllerBase
@@ -16,6 +18,7 @@ public class OrganizationsController : ControllerBase
     }
 
     [HttpGet]
+    [ResponseCache(Duration = 600)]
     [ProducesResponseType(typeof(IEnumerable<OrganizationDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10)
     {
@@ -25,6 +28,7 @@ public class OrganizationsController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [ResponseCache(Duration = 600)]
     [ProducesResponseType(typeof(OrganizationDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(int id)
